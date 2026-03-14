@@ -87,10 +87,11 @@ class AutonomousCoder:
         # Pull latest changes before pushing
         pull_result = self._run_command(["git", "pull", repo_url_with_token, branch], cwd=self.base_path)
         if not pull_result["success"]:
-            return pull_result
+            # If pull fails, we still try to push, but log the pull error
+            print(f'WARNING: Git pull failed: {pull_result.get("stderr", "Unknown error")}')
 
-        # Push to rem        push_result = self._run_command(["git", "push", repo_url_with_token, branch], cwd=self.base_path)
-        
+        # Push to remote
+        push_result = self._run_command(["git", "push", repo_url_with_token, branch], cwd=self.base_path)
         if not push_result["success"] and "Everything up-to-date" not in push_result["stderr"]:
             return push_result
         
