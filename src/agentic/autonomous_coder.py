@@ -82,15 +82,15 @@ class AutonomousCoder:
         if not commit_result["success"] and "nothing to commit" not in commit_result["stderr"]:
             return commit_result
         
-        repo_url_with_token = f"https://{self.github_token}@github.com/ScottEverduim/Aura-Creatine.git"
+        # Use 'origin' remote for pull/push, relying on credential helper or env var for auth
 
         # Pull latest changes before pushing
-        pull_result = self._run_command(["git", "pull", repo_url_with_token, branch], cwd=self.base_path)
+        pull_result = self._run_command(["git", "pull", "origin", branch], cwd=self.base_path)
         if not pull_result["success"]:
             return pull_result
 
         # Push to remote
-        push_result = self._run_command(["git", "push", repo_url_with_token, branch], cwd=self.base_path)
+        push_result = self._run_command(["git", "push", "origin", branch], cwd=self.base_path)
         
         if not push_result["success"] and "Everything up-to-date" not in push_result["stderr"]:
             return push_result
