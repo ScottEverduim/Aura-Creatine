@@ -82,6 +82,11 @@ class AutonomousCoder:
         if not commit_result["success"] and "nothing to commit" not in commit_result["stderr"]:
             return commit_result
         
+        # Pull latest changes before pushing
+        pull_result = self._run_command(["git", "pull", repo_url, branch], cwd=self.base_path)
+        if not pull_result["success"]:
+            return pull_result
+
         # Push to remote
         # Use the token directly in the URL for authentication
         repo_url = f"https://{self.github_token}@github.com/ScottEverduim/Aura-Creatine.git" # Assuming AlleyBot is the base repo for now
